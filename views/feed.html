@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialSphere - Feed</title>
+  <link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/feed.css" />
+
+</head>
+<body>
+  <div id="navbar"></div>
+  <div class="feed-hero">
+    <div class="hero-content">
+        <h1>Welcome Back 👋</h1>
+        <p>Share your thoughts, connect with friends, and discover what's happening today.</p>
+    </div>
+</div>
+
+  <div class="container">
+    <!-- Post Composer -->
+    <div class="post-composer">
+      <div id="composerMessage" class="message"></div>
+      <form id="postForm">
+        <div class="composer-top">
+          <textarea id="postContent" placeholder="What's on your mind?" rows="2"></textarea>
+        </div>
+        <img id="imagePreview" class="image-preview" alt="Preview" />
+        <div class="composer-actions">
+          <label class="image-upload-label">
+            &#128247; Photo
+            <input type="file" id="postImage" accept="image/*" style="display:none;" />
+          </label>
+          <button type="submit" id="postBtn" class="btn btn-primary btn-sm">Post</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Feed Posts -->
+    <div id="feed">
+      <div class="loading">Loading posts...</div>
+    </div>
+  </div>
+
+  <!-- Edit Post Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3>Edit Post</h3>
+      <div class="form-group">
+        <textarea id="editPostContent" rows="4"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveEditPost()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script>
+    // Store current user ID from token for ownership checks
+    (async function() {
+      const result = await apiRequest('/auth/me');
+      if (result && result.ok) {
+        localStorage.setItem('userId', result.data.data.id);
+      }
+    })();
+  </script>
+  <script src="/js/feed.js"></script>
+</body>
+</html>

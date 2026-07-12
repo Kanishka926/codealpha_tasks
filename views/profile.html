@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSphere - My Profile</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div id="navbar"></div>
+
+<!-- Hero Banner -->
+<section class="hero-banner">
+
+    <div class="hero-content">
+
+        <h1>👤 My Profile</h1>
+
+        <p>
+            View your profile, posts and activity.
+        </p>
+
+    </div>
+
+</section>
+
+<div class="container">
+
+    <div id="profileContainer">
+
+        <div class="loading">
+
+            Loading profile...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Edit Post Modal -->
+
+<div class="modal-overlay" id="editModal">
+
+    <div class="modal">
+
+        <h3>Edit Post</h3>
+
+        <div class="form-group">
+
+            <textarea id="editPostContent" rows="4"></textarea>
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button class="btn btn-secondary" onclick="closeEditModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="btn btn-primary" onclick="saveEditPost()">
+
+                Save
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/common.js"></script>
+
+<script>
+
+(async function(){
+
+    const result = await apiRequest('/auth/me');
+
+    if(result && result.ok){
+
+        localStorage.setItem('userId',result.data.data.id);
+
+    }
+
+})();
+
+</script>
+
+<script src="/js/profile.js"></script>
+
+</body>
+
+</html>

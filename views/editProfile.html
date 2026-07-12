@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialSphere - Edit Profile</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <div class="card">
+      <h2 style="margin-bottom:16px;font-size:1.2rem;">Edit Profile</h2>
+
+      <div id="message" class="message"></div>
+
+      <!-- Profile Picture Section -->
+      <div id="currentPicture" style="text-align:center;margin-bottom:16px;"></div>
+      <form id="pictureForm" style="margin-bottom:20px;text-align:center;">
+        <input type="file" id="profilePicInput" accept="image/*" style="display:none;" />
+        <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('profilePicInput').click();">Change Profile Picture</button>
+      </form>
+
+      <hr class="divider" />
+
+      <!-- Profile Info Form -->
+      <form id="editForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" placeholder="Tell us about yourself" maxlength="200" rows="3"></textarea>
+        </div>
+        <button type="submit" id="saveBtn" class="btn btn-primary btn-block">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!requireAuth()) return;
+      insertNavbar();
+      await loadCurrentProfile();
+
+      // Handle profile info form
+      document.getElementById('editForm').addEventListener('submit', handleSaveProfile);
+
+      // Handle profile picture upload
+      document.getElementById('profilePicInput').addEventListener('change', handleProfilePicture);
+    });
+
+    async function loadCurrentProfile() {
+      const result = await apiRequest('/auth/me');
+      if (result && result.ok) {
+        const user = result.data.data;
+        document.getElementById('fullName').value = user.fullName || '';
+        document.getElementById('bio').value = user.bio || '';
+
+        const picEl = document.getElementById('currentPicture');
+        if (user.profilePicture) {
+          picEl.innerHTML = `<img src="${user.profilePicture}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" />`;
+        } else {
+          picEl.innerHTML = `<div class="profile-avatar-placeholder" style="width:80px;height:80px;font-size:2rem;margin:0 auto;">${getInitials(user.fullName)}</div>`;
+        }
+      }
+    }
+
+    async function handleSaveProfile(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const bio = document.getElementById('bio').value.trim();
+
+      if (!fullName) {
+        showMessage('message', 'Full name is required', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const result = await apiRequest('/users/profile', {
+        method: 'PUT',
+        body: JSON.stringify({ fullName, bio }),
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+
+      if (result && result.ok) {
+        showMessage('message', 'Profile updated successfully!', 'success');
+      } else {
+        showMessage('message', result?.data?.message || 'Failed to update profile', 'error');
+      }
+    }
+
+    async function handleProfilePicture(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+
+      const result = await apiRequest('/users/profile-picture', {
+        method: 'PUT',
+        body: formData,
+        headers: {},
+      });
+
+      if (result && result.ok) {
+        showMessage('message', 'Profile picture updated!', 'success');
+        loadCurrentProfile();
+      } else {
+        showMessage('message', result?.data?.message || 'Failed to upload picture', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

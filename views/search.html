@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialSphere - Search Users</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+
+<div id="navbar"></div>
+
+<!-- Hero Section -->
+<section class="hero-banner">
+    <div class="hero-content">
+        <h1>🔍 Discover People</h1>
+        <p>Search, connect and explore profiles across SocialSphere.</p>
+    </div>
+</section>
+
+<div class="container">
+
+    <div class="card search-card">
+
+        <form id="searchForm" class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by username..."
+                autocomplete="off"
+            />
+
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+    <div id="searchResults">
+
+        <div class="empty-state">
+
+            <h3>Start Searching 👋</h3>
+
+            <p>
+                Enter a username to find users and visit their profile.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/common.js"></script>
+<script src="/js/search.js"></script>
+
+</body>
+</html>

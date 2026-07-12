@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialSphere - User Profile</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <div id="profileContainer">
+      <div class="loading">Loading profile...</div>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script>
+    // Store current user ID for ownership checks
+    (async function() {
+      const result = await apiRequest('/auth/me');
+      if (result && result.ok) {
+        localStorage.setItem('userId', result.data.data.id);
+      }
+    })();
+  </script>
+  <script src="/js/userProfile.js"></script>
+</body>
+</html>
